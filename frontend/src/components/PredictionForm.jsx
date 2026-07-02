@@ -30,40 +30,35 @@ function PredictionForm({ setLoading, setResult }) {
   }
 
   async function handleSubmit(e) {
-  e.preventDefault();
+    e.preventDefault();
 
-  try {
-    setLoading(true);
+    try {
+      setLoading(true);
 
-    const response = await api.post("/predict", {
-      gender: formData.gender,
-      age: Number(formData.age),
-      height: Number(formData.height),
-      weight: Number(formData.weight),
-      duration: Number(formData.duration),
-      heart_rate: Number(formData.heart_rate),
-      body_temp: Number(formData.body_temp),
-    });
+      const response = await api.post("/predict", {
+        gender: formData.gender,
+        age: Number(formData.age),
+        height: Number(formData.height),
+        weight: Number(formData.weight),
+        duration: Number(formData.duration),
+        heart_rate: Number(formData.heart_rate),
+        body_temp: Number(formData.body_temp),
+      });
 
-    setResult(response.data);
+      setResult(response.data);
 
-    toast.success("Prediction Successful!");
+      toast.success("Prediction Successful!");
 
-  } catch (error) {
-
-    console.error(error);
-
-    toast.error("Prediction Failed");
-
-  } finally {
-
-    setLoading(false);
-
+    } catch (error) {
+      console.error(error);
+      toast.error("Prediction Failed");
+    } finally {
+      setLoading(false);
+    }
   }
-}
 
   const inputClass =
-    "w-full rounded-xl bg-slate-900 border border-slate-700 px-4 py-3 outline-none focus:border-cyan-400 transition";
+    "w-full rounded-xl bg-slate-800/70 border border-slate-700 px-4 py-3 outline-none transition focus:border-cyan-400 focus:ring-2 focus:ring-cyan-400/30";
 
   return (
     <form
@@ -80,6 +75,7 @@ function PredictionForm({ setLoading, setResult }) {
           </label>
 
           <div className="relative">
+
             <User
               size={18}
               className="absolute left-3 top-4 text-slate-400"
@@ -94,10 +90,9 @@ function PredictionForm({ setLoading, setResult }) {
               <option value="male">Male</option>
               <option value="female">Female</option>
             </select>
+
           </div>
         </div>
-
-        {/* Age */}
 
         <InputField
           label="Age"
@@ -105,6 +100,7 @@ function PredictionForm({ setLoading, setResult }) {
           icon={<Calendar size={18} />}
           value={formData.age}
           onChange={handleChange}
+          inputClass={inputClass}
         />
 
         <InputField
@@ -113,6 +109,7 @@ function PredictionForm({ setLoading, setResult }) {
           icon={<Ruler size={18} />}
           value={formData.height}
           onChange={handleChange}
+          inputClass={inputClass}
         />
 
         <InputField
@@ -121,6 +118,7 @@ function PredictionForm({ setLoading, setResult }) {
           icon={<Weight size={18} />}
           value={formData.weight}
           onChange={handleChange}
+          inputClass={inputClass}
         />
 
         <InputField
@@ -129,6 +127,7 @@ function PredictionForm({ setLoading, setResult }) {
           icon={<Timer size={18} />}
           value={formData.duration}
           onChange={handleChange}
+          inputClass={inputClass}
         />
 
         <InputField
@@ -137,26 +136,31 @@ function PredictionForm({ setLoading, setResult }) {
           icon={<HeartPulse size={18} />}
           value={formData.heart_rate}
           onChange={handleChange}
+          inputClass={inputClass}
         />
 
         <div className="md:col-span-2">
+
           <InputField
             label="Body Temperature (°C)"
             name="body_temp"
             icon={<Thermometer size={18} />}
             value={formData.body_temp}
             onChange={handleChange}
+            inputClass={inputClass}
           />
+
         </div>
 
       </div>
 
       <button
         type="submit"
-        className="w-full py-4 rounded-xl bg-gradient-to-r from-cyan-500 to-indigo-600 font-semibold text-lg hover:scale-[1.02] transition"
+        className="w-full py-4 rounded-xl bg-gradient-to-r from-cyan-500 via-blue-500 to-indigo-600 font-semibold text-lg shadow-lg shadow-cyan-500/20 hover:shadow-cyan-500/50 hover:scale-105 duration-300"
       >
-        Predict Calories 🔥
+        🔥 Predict Calories
       </button>
+
     </form>
   );
 }
@@ -167,9 +171,11 @@ function InputField({
   icon,
   value,
   onChange,
+  inputClass,
 }) {
   return (
     <div>
+
       <label className="block mb-2 text-sm text-slate-300">
         {label}
       </label>
@@ -183,14 +189,15 @@ function InputField({
         <input
           type="number"
           step="any"
+          required
           name={name}
           value={value}
           onChange={onChange}
-          required
-          className="w-full rounded-xl bg-slate-900 border border-slate-700 px-10 py-3 outline-none focus:border-cyan-400 transition"
+          className={`${inputClass} pl-10`}
         />
 
       </div>
+
     </div>
   );
 }

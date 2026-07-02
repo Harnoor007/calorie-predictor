@@ -1,7 +1,13 @@
 function Footer() {
   return (
-    <footer className="text-center text-slate-400 text-sm py-6">
-      Built with ❤️ using React, Tailwind CSS, FastAPI & XGBoost
+    <footer className="mt-20 border-t border-white/10">
+
+      <div className="max-w-7xl mx-auto py-8 text-center text-slate-400">
+
+        Built using React • Tailwind CSS • FastAPI • XGBoost
+
+      </div>
+
     </footer>
   );
 }

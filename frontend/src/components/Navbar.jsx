@@ -1,13 +1,37 @@
 function Navbar() {
   return (
-    <nav className="w-full px-8 py-5 flex items-center justify-between">
-      <h1 className="text-2xl font-bold tracking-wide">
-        🔥 CalorieAI
-      </h1>
+    <nav className="sticky top-0 z-50 border-b border-white/10 backdrop-blur-xl bg-slate-950/70">
 
-      <span className="text-slate-300 text-sm">
-        Machine Learning • FastAPI • React
-      </span>
+      <div className="max-w-7xl mx-auto h-20 px-6 flex justify-between items-center">
+
+        <div>
+
+          <h1 className="text-3xl font-black bg-gradient-to-r from-cyan-400 to-indigo-500 bg-clip-text text-transparent">
+
+            CalorieAI
+
+          </h1>
+
+          <p className="text-xs text-slate-400">
+
+            Machine Learning Prediction
+
+          </p>
+
+        </div>
+
+        <div className="hidden md:flex gap-8 text-slate-300">
+
+          <span>React</span>
+
+          <span>FastAPI</span>
+
+          <span>XGBoost</span>
+
+        </div>
+
+      </div>
+
     </nav>
   );
 }
