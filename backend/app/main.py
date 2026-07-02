@@ -3,10 +3,11 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi import HTTPException
 from app.logger import logger
 import time
-
+#for backend only done analytics changes
 from app.schemas import PredictionRequest, PredictionResponse
 from app.predictor import predictor
 from app.utils import health_status
+from app.analytics import get_analytics
 
 
 
@@ -79,6 +80,14 @@ def model_info():
         "target": "Calories Burned",
         "best_model": "XGBoost"
     }
+
+@app.get(
+    "/analytics",
+    tags=["Analytics"]
+)
+def analytics():
+
+    return get_analytics()
 
 @app.post(
     "/predict",

@@ -667,3 +667,258 @@ Developed as a Full Stack Machine Learning project for academic training using:
 - XGBoost
 - Scikit-Learn
 - Tailwind CSS
+
+---
+
+# 📊 Interactive Data Visualization & Analytics Dashboard
+
+One of the major highlights of this project is the **Interactive Analytics Dashboard**, which provides visual insights into the dataset used for training the Machine Learning model. Instead of generating static images, the project uses **Plotly** to create interactive visualizations that are served through the FastAPI backend and rendered dynamically in the React frontend.
+
+This allows users to explore the dataset, understand feature relationships, and gain insights into how the Machine Learning model makes predictions.
+
+---
+
+## 🎯 Why Data Visualization?
+
+Before training any Machine Learning model, it is important to understand the dataset.
+
+Data visualization helps to:
+
+- Understand relationships between different variables.
+- Detect trends and patterns.
+- Identify highly influential features.
+- Discover possible outliers.
+- Explain the Machine Learning model in a more intuitive way.
+
+Rather than treating the model as a "black box", these visualizations provide transparency into the learning process.
+
+---
+
+## 🛠️ Technologies Used
+
+- **Plotly Express** – Interactive graph generation
+- **FastAPI** – Serves graph data through REST APIs
+- **React.js** – Displays graphs dynamically
+- **react-plotly.js** – Renders Plotly charts in the frontend
+
+---
+
+## 📡 Analytics API
+
+The backend exposes a dedicated endpoint:
+
+```http
+GET /analytics
+```
+
+Instead of returning static HTML files, the endpoint generates Plotly figures, converts them into JSON format, and sends them to the React frontend.
+
+The frontend then renders the graphs interactively using Plotly.
+
+This architecture keeps the backend and frontend completely independent while enabling real-time visualization.
+
+---
+
+# 📈 Visualizations Included
+
+---
+
+## 1. Height vs Weight
+
+**Type:** Scatter Plot
+
+### Purpose
+
+This graph visualizes the relationship between a person's height and weight.
+
+### Observation
+
+- Taller individuals generally tend to have higher body weight.
+- Both male and female samples are shown using different colors.
+- The distribution helps understand the physical characteristics of the dataset.
+
+### Importance
+
+This graph verifies that the dataset follows realistic biological relationships.
+
+---
+
+## 2. Age vs Calories Burned
+
+**Type:** Scatter Plot
+
+### Purpose
+
+Shows how calories burned vary across different age groups.
+
+### Observation
+
+- Age alone does not determine calorie expenditure.
+- Individuals of similar ages may burn significantly different calories depending on workout characteristics.
+
+### Importance
+
+This demonstrates that calorie prediction depends on multiple features rather than age alone.
+
+---
+
+## 3. Duration vs Calories Burned
+
+**Type:** Scatter Plot
+
+### Purpose
+
+Shows the relationship between exercise duration and calories burned.
+
+### Observation
+
+- Longer workout durations generally result in higher calorie expenditure.
+- A clear positive trend is visible.
+
+### Importance
+
+Duration is one of the strongest predictors used by the Machine Learning model.
+
+---
+
+## 4. Heart Rate vs Calories Burned
+
+**Type:** Scatter Plot
+
+### Purpose
+
+Visualizes how heart rate changes with calories burned.
+
+### Observation
+
+- Higher heart rates generally correspond to more intense physical activity.
+- Higher exercise intensity usually leads to greater calorie burn.
+
+### Importance
+
+Heart Rate provides valuable physiological information that improves prediction accuracy.
+
+---
+
+## 5. Correlation Heatmap
+
+**Type:** Heatmap
+
+### Purpose
+
+Displays correlation values between all numerical features.
+
+### Observation
+
+The heatmap helps identify:
+
+- Strong positive correlations
+- Weak relationships
+- Feature dependencies
+
+Darker colors indicate stronger relationships.
+
+### Importance
+
+Correlation analysis helps determine whether features are useful for prediction and whether highly correlated features may introduce redundancy.
+
+---
+
+## 6. Feature Importance
+
+**Type:** Horizontal Bar Chart
+
+### Purpose
+
+Displays how much each feature contributes to the final XGBoost prediction.
+
+### Observation
+
+Features with larger importance values have greater influence on the prediction.
+
+Typically, variables such as:
+
+- Duration
+- Heart Rate
+- Body Temperature
+
+have higher importance because they are directly related to workout intensity.
+
+### Importance
+
+Feature Importance improves model interpretability by explaining which inputs the model considers most significant.
+
+---
+
+# 🔄 Data Visualization Workflow
+
+The visualization pipeline follows these steps:
+
+```text
+Dataset
+      │
+      ▼
+Load Dataset (Pandas)
+      │
+      ▼
+Generate Plotly Figures
+      │
+      ▼
+Convert Figures to JSON
+      │
+      ▼
+FastAPI /analytics Endpoint
+      │
+      ▼
+React API Request
+      │
+      ▼
+Render Interactive Graphs using Plotly
+```
+
+This architecture ensures a clean separation between the backend (data processing) and the frontend (visualization).
+
+---
+
+# 💡 Benefits of Interactive Graphs
+
+Compared to static images, interactive Plotly graphs provide:
+
+- Zoom in and out
+- Pan across the graph
+- Hover tooltips displaying exact values
+- Responsive resizing
+- Better readability
+- Improved user experience
+- Professional dashboard appearance
+
+These features make data exploration significantly easier and more engaging.
+
+---
+
+# 🎓 Educational Value
+
+The analytics dashboard is designed not only to present predictions but also to demonstrate the complete Machine Learning workflow.
+
+It allows users to understand:
+
+- How the dataset is distributed
+- Which variables influence calorie prediction
+- Relationships between different biological measurements
+- Why certain features contribute more to the model's decisions
+
+This transforms the application from a simple prediction tool into a comprehensive educational dashboard for Machine Learning and Data Analysis.
+
+---
+
+# 🚀 Summary
+
+The Interactive Analytics Dashboard enhances the project by combining:
+
+- Exploratory Data Analysis (EDA)
+- Interactive Data Visualization
+- Feature Relationship Analysis
+- Model Interpretability
+- Modern Full-Stack Development
+
+The integration of **FastAPI**, **Plotly**, and **React** demonstrates how Machine Learning models can be deployed with rich, interactive visualizations, making predictions transparent, explainable, and easier to understand.

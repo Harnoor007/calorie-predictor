@@ -4,10 +4,38 @@ import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import PredictionForm from "../components/PredictionForm";
 import ResultCard from "../components/ResultCard";
+import { useEffect } from "react";
+import api from "../services/api";
+import GraphCard from "../components/GraphCard";
 
 function Home() {
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState(null);
+  const [graphs,setGraphs]=useState(null);
+
+  useEffect(()=>{
+
+    async function loadGraphs(){
+
+        try{
+
+            const res=await api.get("/analytics");
+
+            setGraphs(res.data);
+
+        }
+
+        catch(err){
+
+            console.log(err);
+
+        }
+
+    }
+
+    loadGraphs();
+
+},[]);
 
   return (
     <div className="min-h-screen overflow-hidden bg-slate-950 text-white relative">
@@ -86,6 +114,82 @@ function Home() {
           </div>
 
         </section>
+
+        {/* Graphs */}
+
+        <section className="mt-28">
+
+<h1 className="text-5xl font-bold text-center mb-16">
+
+Machine Learning Analytics
+
+</h1>
+
+<div className="grid lg:grid-cols-2 gap-10">
+
+<GraphCard
+
+title="Height vs Weight"
+
+description="This graph shows the relationship between a person's height and weight. Taller individuals generally tend to weigh more."
+
+figure={graphs?.height_weight}
+
+/>
+
+<GraphCard
+
+title="Age vs Calories"
+
+description="Age alone does not strongly determine calories burned. Workout intensity has a much greater effect."
+
+figure={graphs?.age_calories}
+
+/>
+
+<GraphCard
+
+title="Duration vs Calories"
+
+description="Longer workouts generally burn more calories, making Duration one of the strongest predictors."
+
+figure={graphs?.duration_calories}
+
+/>
+
+<GraphCard
+
+title="Heart Rate vs Calories"
+
+description="Higher heart rates usually correspond to more intense exercise and greater calorie expenditure."
+
+figure={graphs?.heart_rate}
+
+/>
+
+<GraphCard
+
+title="Correlation Heatmap"
+
+description="The heatmap displays correlations between all numerical features, helping identify strong relationships."
+
+figure={graphs?.heatmap}
+
+/>
+
+<GraphCard
+
+title="Feature Importance"
+
+description="This chart shows how much each feature contributes to the XGBoost model's predictions."
+
+figure={graphs?.feature_importance}
+
+/>
+
+</div>
+
+</section>
 
       </main>
 

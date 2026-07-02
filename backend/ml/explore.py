@@ -1,110 +1,148 @@
-from pathlib import Path
-
-import plotly.express as px
-
+import json
+from plotly.utils import PlotlyJSONEncoder
 from ml.load_data import load_dataset
+import plotly.express as px
+import pandas as pd
+from xgboost import XGBRegressor
 
-BASE_DIR = Path(__file__).resolve().parent.parent
-OUTPUT_DIR = BASE_DIR / "visualizations"
+def create_graphs():
 
-OUTPUT_DIR.mkdir(exist_ok=True)
+    df = load_dataset()
 
-df = load_dataset()
+    sample = df.sample(1000, random_state=42)
 
-sample = df.sample(1000, random_state=42)
+    graphs = {}
 
+    # --------------------------------------------------
+    # Height vs Weight
+    # --------------------------------------------------
 
-def save_plot(fig, filename):
-    path = OUTPUT_DIR / filename
-    fig.write_html(path)
-    print(f"Saved: {path}")
-
-
-# Height vs Weight
-fig = px.scatter(
-    df,
-    x="Height",
-    y="Weight",
-    color="Gender",
-    title="Height vs Weight",
-)
-save_plot(fig, "height_vs_weight.html")
-
-
-# Age vs Calories
-fig = px.scatter(
-    sample,
-    x="Age",
-    y="Calories",
-    color="Gender",
-    title="Age vs Calories",
-)
-save_plot(fig, "age_vs_calories.html")
-
-
-# Height vs Calories
-fig = px.scatter(
-    sample,
-    x="Height",
-    y="Calories",
-    color="Gender",
-    title="Height vs Calories",
-)
-save_plot(fig, "height_vs_calories.html")
-
-
-# Weight vs Calories
-fig = px.scatter(
-    sample,
-    x="Weight",
-    y="Calories",
-    color="Gender",
-    title="Weight vs Calories",
-)
-save_plot(fig, "weight_vs_calories.html")
-
-
-# Duration vs Calories
-fig = px.scatter(
-    sample,
-    x="Duration",
-    y="Calories",
-    color="Gender",
-    title="Duration vs Calories",
-)
-save_plot(fig, "duration_vs_calories.html")
-
-
-# Histograms
-for column in [
-    "Age",
-    "Height",
-    "Weight",
-    "Duration",
-    "Heart_Rate",
-    "Body_Temp",
-]:
-    fig = px.histogram(
+    fig = px.scatter(
         df,
-        x=column,
-        nbins=40,
-        title=f"{column} Distribution",
+        x="Height",
+        y="Weight",
+        color="Gender",
+        title="Height vs Weight",
     )
-    save_plot(fig, f"{column.lower()}_distribution.html")
 
-
-# Heatmap
-encoded = df.copy()
-encoded["Gender"] = encoded["Gender"].map({"male": 0, "female": 1})
-
-corr = encoded.corr(numeric_only=True)
-
-fig = px.imshow(
-    corr,
-    text_auto=True,
-    title="Correlation Matrix",
+    graphs["height_weight"] = json.loads(
+    json.dumps(fig, cls=PlotlyJSONEncoder)
 )
 
-save_plot(fig, "correlation_heatmap.html")
+    # --------------------------------------------------
+    # Age vs Calories
+    # --------------------------------------------------
 
-print("\nAll visualizations generated successfully!")
+    fig = px.scatter(
+        sample,
+        x="Age",
+        y="Calories",
+        color="Gender",
+        title="Age vs Calories",
+    )
+
+    graphs["age_calories"] = json.loads(
+        json.dumps(fig, cls=PlotlyJSONEncoder)
+    )
+
+    # --------------------------------------------------
+    # Duration vs Calories
+    # --------------------------------------------------
+
+    fig = px.scatter(
+        sample,
+        x="Duration",
+        y="Calories",
+        color="Gender",
+        title="Duration vs Calories",
+    )
+
+    graphs["duration_calories"] = json.loads(
+        json.dumps(fig, cls=PlotlyJSONEncoder)  
+    )
+
+    # --------------------------------------------------
+    # Heart Rate vs Calories
+    # --------------------------------------------------
+
+    fig = px.scatter(
+        sample,
+        x="Heart_Rate",
+        y="Calories",
+        color="Gender",
+        title="Heart Rate vs Calories",
+    )
+
+    graphs["heart_rate"] = json.loads(
+        json.dumps(fig, cls=PlotlyJSONEncoder)
+    )
+
+    # --------------------------------------------------
+    # Correlation Heatmap
+    # --------------------------------------------------
+
+    encoded = df.copy()
+
+    encoded["Gender"] = encoded["Gender"].map({
+        "male":0,
+        "female":1
+    })
+
+    corr = encoded.corr(numeric_only=True)
+
+    fig = px.imshow(
+        corr,
+        text_auto=True,
+        title="Correlation Heatmap",
+    )
+
+    graphs["heatmap"] = json.loads(
+        json.dumps(fig, cls=PlotlyJSONEncoder)
+    )
+
+    # --------------------------------------------------
+    # Feature Importance
+    # --------------------------------------------------
+
+    encoded = df.copy()
+
+    encoded["Gender"] = encoded["Gender"].map({
+        "male":0,
+        "female":1
+    })
+
+    X = encoded.drop(columns=["User_ID","Calories"])
+
+    y = encoded["Calories"]
+
+    model = XGBRegressor(
+        n_estimators=300,
+        learning_rate=0.05,
+        max_depth=5,
+        random_state=42,
+        objective="reg:squarederror"
+    )
+
+    model.fit(X,y)
+
+    importance = pd.DataFrame({
+        "Feature":X.columns,
+        "Importance":model.feature_importances_
+    }).sort_values(
+        by="Importance",
+        ascending=False
+    )
+
+    fig = px.bar(
+        importance,
+        x="Importance",
+        y="Feature",
+        orientation="h",
+        title="Feature Importance",
+    )
+
+    graphs["feature_importance"] = json.loads(
+        json.dumps(fig, cls=PlotlyJSONEncoder)
+    )
+
+    return graphs
